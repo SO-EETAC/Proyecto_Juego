@@ -119,31 +119,36 @@ int main(int argc, char *argv[])
 					strcpy(password, p);
 					printf ("Codigo: %d, Nombre: %s, Username: %s, Password: %s\n", codigo, nombre, username, password);
 				}
-				//tengo que comprobar que el username no existe
-				err=mysql_query (conn, "SELECT COUNT USERNAME FROM JUGADOR WHERE JUGADOR.USERNAME ='" );
-				strcat (consulta, username);
-				strcat (consulta, "';'");
+				resultado = NULL;
+				row = NULL;
+				
+				sprintf(consulta,"SELECT count(*) FROM JUGADOR WHERE JUGADOR.USERNAME ='%s';",username );
+				err=mysql_query (conn, consulta);
+				resultado = mysql_store_result (conn);
+				row = mysql_fetch_row (resultado);
+				
 				if (err!=0) {
 					printf ("Error al consultar datos de la base %u %s\n",
 							mysql_errno(conn), mysql_error(conn));
 					exit (1);
 				}
-				resultado = mysql_store_result (conn);
-				row = mysql_fetch_row (resultado);
-				//tengo que introducir variables(nombre,username,password) en BBDD --> INSERT INTO JUGADOR(NOMBRE, USERNAME, PASSWORD) VALUES(...)
-				if (row[0] != NULL)
+				if (atoi(row[0]) >0)
 				{//no se ha podido dar de alta, ya hay otro username igual
+					
 					sprintf(respuesta, "Lo sentimos, el usuario ya existe.");
 				}
 				else
 				{//se puede dar de alta
-					strcpy (values, "INSERT INTO JUEGO (NOMBRE, USERNAME, PASSWORD) VALUES ('");
-					strcat (consulta, nombre); 
-					strcat (consulta, "','");
-					strcat (consulta, username); 
-					strcat (consulta, "',");
-					strcat (consulta, password); 
-					strcat (consulta, ");");
+					
+					strcpy (values, "INSERT INTO JUGADOR (NOMBRE, USERNAME, PASSWORD) VALUES ('");
+					strcat (values, nombre); 
+					strcat (values, "','");
+					strcat (values, username); 
+					strcat (values, "','");
+					strcat (values, password); 
+					strcat (values, "');");
+					
+					err=mysql_query (conn, values);
 					sprintf(respuesta, "Enhorabuena! Se ha dado de alta en el juego!");
 				}
 					
@@ -172,7 +177,7 @@ int main(int argc, char *argv[])
 				strcat (consulta, usuario);
 				strcat (consulta,"';");
 				
-				printf (consulta);
+				printf ("%s",consulta);
 				
 				// hacemos la consulta 
 				err=mysql_query (conn, consulta); 
@@ -208,7 +213,7 @@ int main(int argc, char *argv[])
 				p = strtok( NULL, "/");
 				strcpy (fecha, p);
 
-				printf ("Fecha: %s", fecha);
+				printf ("Fecha: %s\n", fecha);
 				
 				
 				// construimos la consulta SQL
@@ -230,8 +235,8 @@ int main(int argc, char *argv[])
 					strcpy(decision,"NOT_FOUND");
 				}
 				else{
-					printf ("Nombre del ganador : %s \n",row[0]);
-					sprintf (decision,"Nombre del ganador : %s, usuario del ganador : %s",row[1],row[0]);
+					
+					sprintf (decision,"Nombre del ganador : %s, Usuario del ganador : %s\n",row[1],row[0]);
 					
 				}
 				sprintf(respuesta, "%s",decision);
