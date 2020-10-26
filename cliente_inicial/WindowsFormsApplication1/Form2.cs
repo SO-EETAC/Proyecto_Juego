@@ -11,7 +11,7 @@ namespace WindowsFormsApplication1
 {
     public partial class Form2 : Form
     {
-        Form1 F1 = new Form1();
+        
         string name;
         string username;
         string password;
@@ -49,6 +49,9 @@ namespace WindowsFormsApplication1
 
         }
 
-        
+        private void usuario_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

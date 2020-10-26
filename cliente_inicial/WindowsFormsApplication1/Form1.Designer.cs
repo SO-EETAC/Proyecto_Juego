@@ -30,7 +30,8 @@
         {
             this.button2 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.Consultas = new System.Windows.Forms.RadioButton();
+            this.consulta_duracion = new System.Windows.Forms.RadioButton();
+            this.consulta_fecha = new System.Windows.Forms.RadioButton();
             this.LogIn = new System.Windows.Forms.RadioButton();
             this.SignUp = new System.Windows.Forms.RadioButton();
             this.conectar = new System.Windows.Forms.Button();
@@ -40,10 +41,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(173, 177);
-            this.button2.Margin = new System.Windows.Forms.Padding(4);
+            this.button2.Location = new System.Drawing.Point(131, 177);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(100, 28);
+            this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 5;
             this.button2.Text = "Enviar";
             this.button2.UseVisualStyleBackColor = true;
@@ -52,38 +52,48 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.groupBox1.Controls.Add(this.Consultas);
+            this.groupBox1.Controls.Add(this.consulta_duracion);
+            this.groupBox1.Controls.Add(this.consulta_fecha);
             this.groupBox1.Controls.Add(this.LogIn);
             this.groupBox1.Controls.Add(this.SignUp);
             this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Location = new System.Drawing.Point(25, 33);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Location = new System.Drawing.Point(19, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(484, 347);
+            this.groupBox1.Size = new System.Drawing.Size(363, 282);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Peticion";
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
-            // Consultas
+            // consulta_duracion
             // 
-            this.Consultas.AutoSize = true;
-            this.Consultas.Location = new System.Drawing.Point(155, 141);
-            this.Consultas.Margin = new System.Windows.Forms.Padding(4);
-            this.Consultas.Name = "Consultas";
-            this.Consultas.Size = new System.Drawing.Size(176, 21);
-            this.Consultas.TabIndex = 9;
-            this.Consultas.TabStop = true;
-            this.Consultas.Text = "Quiero hacer consultas";
-            this.Consultas.UseVisualStyleBackColor = true;
+            this.consulta_duracion.AutoSize = true;
+            this.consulta_duracion.Location = new System.Drawing.Point(116, 139);
+            this.consulta_duracion.Name = "consulta_duracion";
+            this.consulta_duracion.Size = new System.Drawing.Size(173, 17);
+            this.consulta_duracion.TabIndex = 10;
+            this.consulta_duracion.TabStop = true;
+            this.consulta_duracion.Text = "Consultar ganador por duracion";
+            this.consulta_duracion.UseVisualStyleBackColor = true;
+            // 
+            // consulta_fecha
+            // 
+            this.consulta_fecha.AutoSize = true;
+            this.consulta_fecha.Location = new System.Drawing.Point(116, 115);
+            this.consulta_fecha.Name = "consulta_fecha";
+            this.consulta_fecha.Size = new System.Drawing.Size(159, 17);
+            this.consulta_fecha.TabIndex = 9;
+            this.consulta_fecha.TabStop = true;
+            this.consulta_fecha.Text = "Consultar ganador por fecha";
+            this.consulta_fecha.UseVisualStyleBackColor = true;
+            this.consulta_fecha.CheckedChanged += new System.EventHandler(this.Consultas_CheckedChanged);
             // 
             // LogIn
             // 
             this.LogIn.AutoSize = true;
-            this.LogIn.Location = new System.Drawing.Point(155, 112);
-            this.LogIn.Margin = new System.Windows.Forms.Padding(4);
+            this.LogIn.Location = new System.Drawing.Point(116, 91);
             this.LogIn.Name = "LogIn";
-            this.LogIn.Size = new System.Drawing.Size(240, 21);
+            this.LogIn.Size = new System.Drawing.Size(183, 17);
             this.LogIn.TabIndex = 7;
             this.LogIn.TabStop = true;
             this.LogIn.Text = "Quiero hacer Log In en mi cuenta";
@@ -92,10 +102,9 @@
             // SignUp
             // 
             this.SignUp.AutoSize = true;
-            this.SignUp.Location = new System.Drawing.Point(155, 84);
-            this.SignUp.Margin = new System.Windows.Forms.Padding(4);
+            this.SignUp.Location = new System.Drawing.Point(116, 68);
             this.SignUp.Name = "SignUp";
-            this.SignUp.Size = new System.Drawing.Size(163, 21);
+            this.SignUp.Size = new System.Drawing.Size(123, 17);
             this.SignUp.TabIndex = 8;
             this.SignUp.TabStop = true;
             this.SignUp.Text = "Quiero darme de alta";
@@ -103,10 +112,9 @@
             // 
             // conectar
             // 
-            this.conectar.Location = new System.Drawing.Point(562, 140);
-            this.conectar.Margin = new System.Windows.Forms.Padding(4);
+            this.conectar.Location = new System.Drawing.Point(422, 114);
             this.conectar.Name = "conectar";
-            this.conectar.Size = new System.Drawing.Size(100, 28);
+            this.conectar.Size = new System.Drawing.Size(75, 23);
             this.conectar.TabIndex = 7;
             this.conectar.Text = "Conectar";
             this.conectar.UseVisualStyleBackColor = true;
@@ -114,10 +122,9 @@
             // 
             // desconectar
             // 
-            this.desconectar.Location = new System.Drawing.Point(562, 197);
-            this.desconectar.Margin = new System.Windows.Forms.Padding(4);
+            this.desconectar.Location = new System.Drawing.Point(422, 160);
             this.desconectar.Name = "desconectar";
-            this.desconectar.Size = new System.Drawing.Size(100, 28);
+            this.desconectar.Size = new System.Drawing.Size(75, 23);
             this.desconectar.TabIndex = 8;
             this.desconectar.Text = "Desonectar";
             this.desconectar.UseVisualStyleBackColor = true;
@@ -125,13 +132,12 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(703, 420);
+            this.ClientSize = new System.Drawing.Size(527, 341);
             this.Controls.Add(this.desconectar);
             this.Controls.Add(this.conectar);
             this.Controls.Add(this.groupBox1);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -146,9 +152,10 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton LogIn;
         private System.Windows.Forms.RadioButton SignUp;
-        private System.Windows.Forms.RadioButton Consultas;
+        private System.Windows.Forms.RadioButton consulta_fecha;
         private System.Windows.Forms.Button conectar;
         private System.Windows.Forms.Button desconectar;
+        private System.Windows.Forms.RadioButton consulta_duracion;
     }
 }
 

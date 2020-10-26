@@ -1,3 +1,4 @@
+#include <mysql.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -5,7 +6,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
-#include <mysql.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 	//htonl formatea el numero que recibe al formato necesario
 	serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
 	// escucharemos en el port 9050
-	serv_adr.sin_port = htons(9080);
+	serv_adr.sin_port = htons(9040);
 	if (bind(sock_listen, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) < 0)
 		printf ("Error al bind");
 	//La cola de peticiones pendientes no podra ser superior a 4
@@ -95,20 +95,7 @@ int main(int argc, char *argv[])
 			//peticion: 1/nombre/username/password
 			char *p = strtok( peticion, "/");
 			int codigo =  atoi (p);
-			char nombre[20];
-			char username[20];
-			char password[20];
 			
-			if (codigo !=0)
-			{
-				p = strtok( NULL, "/");
-				strcpy(nombre, p);
-				p = strtok(NULL, "/");
-				strcpy(username, p);
-				p = strtok(NULL, "/");
-				strcpy(password, p);
-				printf ("Codigo: %d, Nombre: %s, Username: %s, Password: %s\n", codigo, nombre, username, password);
-			}
 			
 			//4)PREPARA LA RESPUESTA
 			
@@ -118,6 +105,20 @@ int main(int argc, char *argv[])
 			}
 			else if (codigo ==1)
 			{//piden DARSE DE ALTA
+				char nombre[20];
+				char username[20];
+				char password[20];
+				
+				if (codigo !=0)
+				{
+					p = strtok( NULL, "/");
+					strcpy(nombre, p);
+					p = strtok(NULL, "/");
+					strcpy(username, p);
+					p = strtok(NULL, "/");
+					strcpy(password, p);
+					printf ("Codigo: %d, Nombre: %s, Username: %s, Password: %s\n", codigo, nombre, username, password);
+				}
 				//tengo que comprobar que el username no existe
 				err=mysql_query (conn, "SELECT COUNT USERNAME FROM JUGADOR WHERE JUGADOR.USERNAME ='" );
 				strcat (consulta, username);
@@ -148,6 +149,135 @@ int main(int argc, char *argv[])
 					
 			}
 			//AQUI TERMINA DARSE DE ALTA DE JUDITH
+			//AQUI EMPIEZA LOGUEARSE DE HECTOR
+			else if (codigo == 2)
+			{
+				char usuario[20];
+				char contra[20];
+				char decision[20];
+				
+				strcpy(decision,"Prueba");
+				
+				printf("Esto es una %s \n",decision);
+				
+				p = strtok( NULL, "/");
+				strcpy (usuario, p);
+				p = strtok( NULL, "/");
+				strcpy (contra, p);
+				printf ("Usuario: %s, Contraseña: %s\n", usuario, contra);
+				
+				
+				// construimos la consulta SQL
+				strcpy (consulta,"SELECT PASSWORD FROM JUGADOR WHERE USERNAME = '"); 
+				strcat (consulta, usuario);
+				strcat (consulta,"';");
+				
+				printf (consulta);
+				
+				// hacemos la consulta 
+				err=mysql_query (conn, consulta); 
+				if (err!=0) {
+					printf ("Error al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
+					exit (1);
+				}
+				//recogemos el resultado de la con2sulta 
+				resultado = mysql_store_result (conn);
+				row = mysql_fetch_row (resultado);
+				if (row == NULL){
+					printf ("No se han obtenido datos en la consulta\n");
+				    strcpy (decision,"USER_NOT_FOUND");
+				}
+				else{
+					
+					if (strcmp(row[0], contra) == 0) {
+						printf ("Autentificacion exitosa! \n");
+						strcpy (decision,"Y");
+					}
+					else {
+						printf ("Autentificacion fallida :(  \n");
+						strcpy (decision,"N");
+					}
+					
+				}
+				sprintf(respuesta, "%s",decision);
+			}
+			else if (codigo == 3){
+
+				char fecha[20];
+				char decision[20];
+				p = strtok( NULL, "/");
+				strcpy (fecha, p);
+
+				printf ("Fecha: %s", fecha);
+				
+				
+				// construimos la consulta SQL
+				 
+				sprintf (consulta,"SELECT JUGADOR.USERNAME, PARTIDA.GANADOR FROM JUGADOR INNER JOIN PARTIDA ON JUGADOR.NOMBRE = PARTIDA.GANADOR WHERE DATE(PARTIDA.FECHA_HORA) = DATE('%s') ;",fecha); 
+
+				// hacemos la consulta 
+				
+				err=mysql_query (conn, consulta); 
+				if (err!=0) {
+					printf ("Error al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
+					exit (1);
+				}
+				//recogemos el resultado de la con2sulta 
+				resultado = mysql_store_result (conn);
+				row = mysql_fetch_row (resultado);
+				if (row == NULL){
+					printf ("No hay ganadores para la fecha seleccionada\n");
+					strcpy(decision,"NOT_FOUND");
+				}
+				else{
+					printf ("Nombre del ganador : %s \n",row[0]);
+					sprintf (decision,"Nombre del ganador : %s, usuario del ganador : %s",row[1],row[0]);
+					
+				}
+				sprintf(respuesta, "%s",decision);
+				
+				
+	
+			}
+			else if (codigo == 4){
+				
+				char duracion[20];
+				char decision[20];
+				p = strtok( NULL, "/");
+				strcpy(duracion, p);
+
+				printf ("duracion: %s \n", duracion);
+				
+				// construimos la consulta SQL
+				strcpy (consulta,"SELECT GANADOR FROM PARTIDA WHERE DURACION = '"); 
+				strcat (consulta, duracion);
+				strcat (consulta,"';");
+				
+				printf("%s\n",consulta);
+				
+				
+				// hacemos la consulta 
+				err=mysql_query (conn, consulta); 
+				if (err!=0) {
+					printf ("Error al consultar datos de la base %u %s\n",
+							mysql_errno(conn), mysql_error(conn));
+					exit (1);
+				}
+				//recogemos el resultado de la consulta 
+				resultado = mysql_store_result (conn); 
+				row = mysql_fetch_row (resultado);
+				if (row == NULL){
+					printf ("No se han obtenido datos en la consulta\n");
+					strcpy(decision,"NOT_FOUND");
+				}
+				else{
+					
+						// la columna 0 contiene el nombre del primer jugador
+					sprintf (decision,"Nombre del ganador : %s",row[0]);
+					
+				}
+				sprintf(respuesta, "%s",decision);
+			}
 			
 			if (codigo !=0)
 			{
