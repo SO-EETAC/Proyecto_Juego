@@ -30,6 +30,7 @@
         {
             this.button2 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.consulta_lista = new System.Windows.Forms.RadioButton();
             this.consulta_duracion = new System.Windows.Forms.RadioButton();
             this.consulta_fecha = new System.Windows.Forms.RadioButton();
             this.LogIn = new System.Windows.Forms.RadioButton();
@@ -41,7 +42,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(131, 177);
+            this.button2.Location = new System.Drawing.Point(132, 190);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 5;
@@ -52,6 +53,7 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.groupBox1.Controls.Add(this.consulta_lista);
             this.groupBox1.Controls.Add(this.consulta_duracion);
             this.groupBox1.Controls.Add(this.consulta_fecha);
             this.groupBox1.Controls.Add(this.LogIn);
@@ -63,7 +65,17 @@
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Peticion";
-            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // consulta_lista
+            // 
+            this.consulta_lista.AutoSize = true;
+            this.consulta_lista.Location = new System.Drawing.Point(116, 162);
+            this.consulta_lista.Name = "consulta_lista";
+            this.consulta_lista.Size = new System.Drawing.Size(205, 17);
+            this.consulta_lista.TabIndex = 11;
+            this.consulta_lista.TabStop = true;
+            this.consulta_lista.Text = "Consultar la lista de jugadores en linea";
+            this.consulta_lista.UseVisualStyleBackColor = true;
             // 
             // consulta_duracion
             // 
@@ -86,7 +98,6 @@
             this.consulta_fecha.TabStop = true;
             this.consulta_fecha.Text = "Consultar ganador por fecha";
             this.consulta_fecha.UseVisualStyleBackColor = true;
-            this.consulta_fecha.CheckedChanged += new System.EventHandler(this.Consultas_CheckedChanged);
             // 
             // LogIn
             // 
@@ -156,6 +167,7 @@
         private System.Windows.Forms.Button conectar;
         private System.Windows.Forms.Button desconectar;
         private System.Windows.Forms.RadioButton consulta_duracion;
+        private System.Windows.Forms.RadioButton consulta_lista;
     }
 }
 

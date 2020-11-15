@@ -149,6 +149,26 @@ namespace WindowsFormsApplication1
                     MessageBox.Show(mensaje);
 
             }
+            else if (consulta_lista.Checked){
+
+                
+                string mensaje = "5/";
+                // Enviamos el código pertinente a la solicitud
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+
+                //Recibimos la respuesta del servidor
+                byte[] msg2 = new byte[80];
+                server.Receive(msg2);
+                mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+
+                Form6 F6 = new Form6();
+                F6.setListado(mensaje);
+                F6.ShowDialog();
+                
+                
+
+            }
         }
 
         private void desconectar_Click(object sender, EventArgs e)
@@ -163,31 +183,6 @@ namespace WindowsFormsApplication1
             this.BackColor = Color.Gray;
             server.Shutdown(SocketShutdown.Both);
             server.Close();
-        }
-
-        private void Consultas_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Duracion_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void LogIn_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SignUp_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
         }
     }
 }
