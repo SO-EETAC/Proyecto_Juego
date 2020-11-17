@@ -184,5 +184,10 @@ namespace WindowsFormsApplication1
             server.Shutdown(SocketShutdown.Both);
             server.Close();
         }
+
+        private void LogIn_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

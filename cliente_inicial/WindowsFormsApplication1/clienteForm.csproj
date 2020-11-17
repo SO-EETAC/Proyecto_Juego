@@ -90,6 +90,12 @@
     <Compile Include="Form6.Designer.cs">
       <DependentUpon>Form6.cs</DependentUpon>
     </Compile>
+    <Compile Include="Partida.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Partida.Designer.cs">
+      <DependentUpon>Partida.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form de Logueo.resx">
@@ -109,6 +115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form6.resx">
       <DependentUpon>Form6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Partida.resx">
+      <DependentUpon>Partida.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -132,6 +141,15 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tablero vacío.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tablero_def.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Robar_caja.JPG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

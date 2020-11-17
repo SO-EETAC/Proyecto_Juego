@@ -109,6 +109,7 @@
             this.LogIn.TabStop = true;
             this.LogIn.Text = "Quiero hacer Log In en mi cuenta";
             this.LogIn.UseVisualStyleBackColor = true;
+            this.LogIn.CheckedChanged += new System.EventHandler(this.LogIn_CheckedChanged);
             // 
             // SignUp
             // 

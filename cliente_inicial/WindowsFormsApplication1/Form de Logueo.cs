@@ -32,7 +32,8 @@ namespace WindowsFormsApplication1
         private void button1_Click(object sender, EventArgs e)
         {
             username = textBox1.Text;
-            password = textBox2.Text;
+            password = textBox2.Text
+
             Close();
         }
 
