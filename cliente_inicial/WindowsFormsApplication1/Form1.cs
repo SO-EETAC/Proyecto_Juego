@@ -8,12 +8,15 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
         Socket server;
+        Thread atender;
+
         string nombre;
         string usuario;
         string contraseña;
@@ -27,26 +30,88 @@ namespace WindowsFormsApplication1
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void AtenderServidor()
         {
+
+            while (true)
+            {
+                //Recibimos la respuesta del servidor
+                byte[] msg2 = new byte[80];
+                server.Receive(msg2);
+                string[] trozos = Encoding.ASCII.GetString(msg2).Split('/');
+                int codigo = Convert.ToInt32(trozos[0]);
+                string mensaje = trozos[1].Split('\0')[0];
+                Form6 F6 = new Form6();
+
+                switch (codigo)
+                {
+
+                    case 1://Puedo crear una cuenta
+
+                        MessageBox.Show(mensaje);
+                        break;
+
+                    case 2://Puedo iniciar sesión?
+
+                        if (mensaje == "Y")
+                            MessageBox.Show("Has sido autenticado correctamente!!!");
+                        else if (mensaje == "N")
+                            MessageBox.Show("Contraseña incorrecta");
+                        else if (mensaje == "USER_NOT_FOUND")
+                            MessageBox.Show("El usuario no existe.");
+                        break;
+
+                    case 3://Hay ganadores para una fecha?
+
+                        if (mensaje == "NOT_FOUND")
+                            MessageBox.Show("No hay ganadores para esta fecha");
+                        else
+                            MessageBox.Show(mensaje);
+                        break;
+
+                    case 4://Hay ganadores para una duración?
+
+                        if (mensaje == "NOT_FOUND")
+                            MessageBox.Show("No hay ganadores con la duracion de partida proporcionada ");
+                        else
+                            MessageBox.Show(mensaje);
+                        break;
+
+                    case 5://Que usuarios hay conectados?
+
+                        F6.setListado(mensaje);
+                        F6.ShowDialog();
+                        break;
+
+                    case 6://Hay una notificación!
+
+                        F6.setListado(mensaje);
+                        F6.ShowDialog();
+                        break;
+
+                }
+
+
+
+            }
+            
 
 
         }
-        
 
         private void conectar_Click(object sender, EventArgs e)
         {
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102");
-            IPEndPoint ipep = new IPEndPoint(direc, 9040);
+            IPEndPoint ipep = new IPEndPoint(direc, 9002);
             //Creamos el socket 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
                 server.Connect(ipep);//Intentamos conectar el socket
                 this.BackColor = Color.Green;
-                MessageBox.Show("Conectado");
+                //MessageBox.Show("Conectado");
 
             }
             catch (SocketException)
@@ -55,6 +120,12 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("No he podido conectar con el servidor");
                 return;
             }
+
+            //Ponemos en marcha el thread que atenderá los mensajes del servidor
+            ThreadStart ts = delegate { AtenderServidor(); };
+            atender = new Thread(ts);
+            atender.Start();
+
         }
         private void button2_Click(object sender, EventArgs e)
         {
@@ -72,12 +143,6 @@ namespace WindowsFormsApplication1
 
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
-
-                //Recibimos la respuesta del servidor
-                byte[] msg2 = new byte[80];
-                server.Receive(msg2);
-                mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-                MessageBox.Show(mensaje);
             }
             else if (LogIn.Checked)
             {
@@ -92,18 +157,6 @@ namespace WindowsFormsApplication1
                 // Enviamos al servidor el nombre tecleado
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
-
-                //Recibimos la respuesta del servidor
-                byte[] msg2 = new byte[80];
-                server.Receive(msg2);
-                mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-
-                if (mensaje == "Y")
-                    MessageBox.Show("Has sido autenticado correctamente!!!");
-                else if (mensaje == "N")
-                    MessageBox.Show("Contraseña incorrecta");
-                else if (mensaje == "USER_NOT_FOUND")
-                    MessageBox.Show("El usuario no existe.");
             }
             else if (consulta_fecha.Checked)
             {
@@ -116,16 +169,6 @@ namespace WindowsFormsApplication1
                 // Enviamos al servidor el nombre tecleado
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
-
-                //Recibimos la respuesta del servidor
-                byte[] msg2 = new byte[80];
-                server.Receive(msg2);
-                mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-
-                if (mensaje == "NOT_FOUND")
-                    MessageBox.Show("No hay ganadores para esta fecha");
-                else
-                    MessageBox.Show(mensaje);
             }
             else if (consulta_duracion.Checked)
             {
@@ -137,17 +180,6 @@ namespace WindowsFormsApplication1
                 // Enviamos al servidor la duracion que nos han pasado por consola
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
-
-                //Recibimos la respuesta del servidor
-                byte[] msg2 = new byte[80];
-                server.Receive(msg2);
-                mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-
-                if (mensaje == "NOT_FOUND")
-                    MessageBox.Show("No hay ganadores con la duracion de partida proporcionada ");
-                else
-                    MessageBox.Show(mensaje);
-
             }
             else if (consulta_lista.Checked){
 
@@ -156,18 +188,6 @@ namespace WindowsFormsApplication1
                 // Enviamos el código pertinente a la solicitud
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
-
-                //Recibimos la respuesta del servidor
-                byte[] msg2 = new byte[80];
-                server.Receive(msg2);
-                mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-
-                Form6 F6 = new Form6();
-                F6.setListado(mensaje);
-                F6.ShowDialog();
-                
-                
-
             }
         }
 
@@ -179,6 +199,9 @@ namespace WindowsFormsApplication1
             server.Send(msg);
 
             // Se terminó el servicio. 
+
+            atender.Abort();
+
             // Nos desconectamos
             this.BackColor = Color.Gray;
             server.Shutdown(SocketShutdown.Both);

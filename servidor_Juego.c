@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <stdbool.h>
 
 //EN ESTA VERSION, HAY LA PRIMERA PARTE DE LA VERSION 2: SERVIDOR CONCURRENTE
 
@@ -27,9 +28,10 @@ typedef struct {
 	int num;
 } ListaConectados;
 
-
-
 ListaConectados lista_jugadores;
+
+int i;
+int sockets[100];
 
 //Estructura necesaria para acceso excluyente
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -83,7 +85,7 @@ int Eliminar(ListaConectados *lista, char nombre[20]){
 	
 void DameConectados (ListaConectados *lista, char conectados[400]){
 	//Recibe la lista de conectados y retorna un vector de caracteres con los nombres
-	//separados por /. --> "3/Juan/Maria/Pedro"
+	//separados por _. --> "3_Juan_Maria_Pedro"
 	
 	sprintf(conectados, "%d", lista->num);
 	
@@ -91,7 +93,7 @@ void DameConectados (ListaConectados *lista, char conectados[400]){
 	
 	for (i = 0; i < lista->num; i++){
 		
-		sprintf(conectados, "%s/%s", conectados, lista->conectados[i].nombre);
+		sprintf(conectados, "%s_%s", conectados, lista->conectados[i].nombre);
 		
 	}		
 }
@@ -136,7 +138,7 @@ void *AtenderCliente(void *socket){
 	
 	while (terminar ==0)
 	{
-		
+		bool notificacion_n = false;
 		// Ahora recibimos su nombre, que dejamos en buff
 		
 		//2)RECOGE LA PETICION
@@ -157,15 +159,15 @@ void *AtenderCliente(void *socket){
 		
 		//peticion: 1/nombre/username/password
 		
+		char jugadores_conectados[400];
+		
 		char *p = strtok( peticion, "/");
 		int codigo =  atoi (p);
 		
 		
 		//4)PREPARA LA RESPUESTA
 		
-		if (codigo == 0)
-		{//piden DESCONECTARSE
-			terminar = 1;
+		if (codigo == 0){//piden DESCONECTARSE
 			
 			pthread_mutex_lock(&mutex); //No me interrumpas ahora
 			
@@ -183,6 +185,10 @@ void *AtenderCliente(void *socket){
 				printf("Elminado\n");
 				
 			}
+			
+			notificacion_n = true;
+			
+			terminar = 1;
 			
 			
 		}
@@ -221,7 +227,7 @@ void *AtenderCliente(void *socket){
 			if (atoi(row[0]) >0)
 			{//no se ha podido dar de alta, ya hay otro username igual
 				
-				sprintf(respuesta, "Lo sentimos, el usuario ya existe.");
+				sprintf(respuesta, "1/Lo sentimos, el usuario ya existe.");
 			}
 			else
 			{//se puede dar de alta
@@ -235,7 +241,7 @@ void *AtenderCliente(void *socket){
 				strcat (values, "');");
 				
 				err=mysql_query (conn, values);
-				sprintf(respuesta, "Enhorabuena! Se ha dado de alta en el juego!");
+				sprintf(respuesta, "1/Enhorabuena! Se ha dado de alta en el juego!");
 				
 				pthread_mutex_lock(&mutex); //No me interrumpas ahora
 				
@@ -243,6 +249,8 @@ void *AtenderCliente(void *socket){
 				
 				pthread_mutex_unlock(&mutex); //Ya me puedes interrumpir
 			}
+			
+			notificacion_n = true;
 			
 		}
 		//AQUI TERMINA DARSE DE ALTA DE JUDITH
@@ -310,7 +318,9 @@ void *AtenderCliente(void *socket){
 				}
 				
 			}
-			sprintf(respuesta, "%s",decision);
+			sprintf(respuesta, "2/%s",decision);
+			
+			notificacion_n = true;
 		}
 		//AQUI TERMINA LOGUEARSE DE HECTOR
 		
@@ -349,7 +359,7 @@ void *AtenderCliente(void *socket){
 				
 				sprintf (decision,"Nombre del ganador : %s, Usuario del ganador : %s\n",row[1],row[0]);
 			}
-			sprintf(respuesta, "%s",decision);
+			sprintf(respuesta, "3/%s",decision);
 			
 			
 			
@@ -396,7 +406,7 @@ void *AtenderCliente(void *socket){
 				sprintf (decision,"Nombre del ganador : %s",row[0]);
 				
 			}
-			sprintf(respuesta, "%s",decision);
+			sprintf(respuesta, "4/%s",decision);
 		}
 		//AQUI ACABA CONSULTA DE GILBERT
 		
@@ -406,12 +416,10 @@ void *AtenderCliente(void *socket){
 		
 		else if (codigo == 5)
 		{//piden una lista con los conectados
-	
-			char jugadores_conectados[400];
 			
 			DameConectados(&lista_jugadores,jugadores_conectados);
 			
-			sprintf(respuesta, "%s",jugadores_conectados);
+			sprintf(respuesta, "5/%s",jugadores_conectados);
 		}
 		
 		if (codigo !=0)
@@ -421,6 +429,22 @@ void *AtenderCliente(void *socket){
 			//5)ENVIA LA RESPUESTA
 			// Y lo enviamos
 			write (sock_conn,respuesta, strlen(respuesta));
+		}
+		
+		if (notificacion_n){//Enviamos la lista de jugadores_conectados a todos los sockets
+			
+			char notificacion[400];
+			
+			DameConectados(&lista_jugadores,jugadores_conectados);
+			
+			sprintf(notificacion, "6/%s", jugadores_conectados);
+			
+			for(int j=0; j < i; j++){
+				
+				write(sockets[j], notificacion, strlen(notificacion));
+				
+			}
+			
 		}
 	}
 	
@@ -451,15 +475,13 @@ int main(int argc, char *argv[]){
 	//htonl formatea el numero que recibe al formato necesario
 	serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
 	// escucharemos en el port 9050
-	serv_adr.sin_port = htons(9040);
+	serv_adr.sin_port = htons(9002);
 	if (bind(sock_listen, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) < 0)
-		printf ("Error al bind");
+		printf ("Error al bind\n");
 	//La cola de peticiones pendientes no podra ser superior a 4
 	if (listen(sock_listen, 2) < 0)
 		printf("Error en el Listen");
 	
-	int i;
-	int sockets[100];
 	pthread_t thread[100];
 	
 	//atendemos infinitas peticiones

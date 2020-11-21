@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
 
         private void Form6_Load(object sender, EventArgs e)
         {
-            string[] segmentos = listado_jugadores.Split('/');
+            string[] segmentos = listado_jugadores.Split('_');
 
             if (segmentos[0] == "0")
             {
@@ -35,7 +35,7 @@ namespace WindowsFormsApplication1
             }
             else if (segmentos[0] == "1")
             {
-                listBox1.Items.Add("El/La " + Convert.ToInt32(segmentos[0]) + " jugador/a en linea es: ");
+                listBox1.Items.Add("El/La jugador/a en linea es: ");
                 listBox1.Items.Add(segmentos[1]);
             }
             else
