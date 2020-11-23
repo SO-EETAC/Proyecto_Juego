@@ -90,11 +90,13 @@
     <Compile Include="Form6.Designer.cs">
       <DependentUpon>Form6.cs</DependentUpon>
     </Compile>
-    <Compile Include="Partida.cs">
+    <Compile Include="..\..\..\Partida.cs">
       <SubType>Form</SubType>
+      <Link>Partida.cs</Link>
     </Compile>
-    <Compile Include="Partida.Designer.cs">
+    <Compile Include="..\..\..\Partida.Designer.cs">
       <DependentUpon>Partida.cs</DependentUpon>
+      <Link>Partida.Designer.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -116,8 +118,9 @@
     <EmbeddedResource Include="Form6.resx">
       <DependentUpon>Form6.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Partida.resx">
+    <EmbeddedResource Include="..\..\..\Partida.resx">
       <DependentUpon>Partida.cs</DependentUpon>
+      <Link>Partida.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
