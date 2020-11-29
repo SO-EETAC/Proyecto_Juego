@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.invitar = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listBox1
@@ -38,15 +39,27 @@
             this.listBox1.ItemHeight = 20;
             this.listBox1.Location = new System.Drawing.Point(12, 12);
             this.listBox1.Name = "listBox1";
+            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.listBox1.Size = new System.Drawing.Size(401, 284);
             this.listBox1.TabIndex = 0;
+            // 
+            // invitar
+            // 
+            this.invitar.Location = new System.Drawing.Point(338, 303);
+            this.invitar.Name = "invitar";
+            this.invitar.Size = new System.Drawing.Size(75, 23);
+            this.invitar.TabIndex = 1;
+            this.invitar.Text = "Invitar";
+            this.invitar.UseVisualStyleBackColor = true;
+            this.invitar.Click += new System.EventHandler(this.invitar_Click);
             // 
             // Form6
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(425, 316);
+            this.ClientSize = new System.Drawing.Size(425, 338);
+            this.Controls.Add(this.invitar);
             this.Controls.Add(this.listBox1);
             this.Name = "Form6";
             this.Text = "Jugadores en Linea";
@@ -58,6 +71,7 @@
         #endregion
 
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Button invitar;
 
     }
 }

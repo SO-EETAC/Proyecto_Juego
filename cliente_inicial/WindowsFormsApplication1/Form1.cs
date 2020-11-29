@@ -28,6 +28,7 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
         }
 
         private void AtenderServidor()
@@ -42,6 +43,7 @@ namespace WindowsFormsApplication1
                 int codigo = Convert.ToInt32(trozos[0]);
                 string mensaje = trozos[1].Split('\0')[0];
                 Form6 F6 = new Form6();
+                Form6 F7 = new Form6();
 
                 switch (codigo)
                 {
@@ -51,14 +53,21 @@ namespace WindowsFormsApplication1
                         MessageBox.Show(mensaje);
                         break;
 
-                    case 2://Puedo iniciar sesión?
+                    case 2://Puedo iniciar sesión? Recibo un mensaje de la forma Y_Usuario o N
 
-                        if (mensaje == "Y")
+                        string[] segmentos = mensaje.Split('_');
+
+                        if (segmentos[0] == "Y")
+                        {
                             MessageBox.Show("Has sido autenticado correctamente!!!");
-                        else if (mensaje == "N")
+                            usuario = segmentos[1];
+                            label1.Text = "Has iniciado sesión como: " + usuario;
+                        }
+                        else if (segmentos[0] == "N")
                             MessageBox.Show("Contraseña incorrecta");
                         else if (mensaje == "USER_NOT_FOUND")
                             MessageBox.Show("El usuario no existe.");
+
                         break;
 
                     case 3://Hay ganadores para una fecha?
@@ -80,14 +89,24 @@ namespace WindowsFormsApplication1
                     case 5://Que usuarios hay conectados?
 
                         F6.setListado(mensaje);
+                        F6.setUsuario(usuario);
                         F6.ShowDialog();
                         break;
 
-                    case 6://Hay una notificación!
+                    case 6://Hay una notificación de nuevo conectado!
 
                         F6.setListado(mensaje);
+                        F6.setUsuario(usuario);
                         F6.ShowDialog();
                         break;
+
+                    case 7://Hay una invitación
+
+                        F7.setListado(string
+
+
+                        break;
+
 
                 }
 
@@ -103,8 +122,8 @@ namespace WindowsFormsApplication1
         {
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
-            IPAddress direc = IPAddress.Parse("147.83.117.22");
-            IPEndPoint ipep = new IPEndPoint(direc, 50001);
+            IPAddress direc = IPAddress.Parse("192.168.56.102"); //147.83.117.22
+            IPEndPoint ipep = new IPEndPoint(direc, 9002); //50001
             //Creamos el socket 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try

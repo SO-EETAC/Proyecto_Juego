@@ -37,6 +37,7 @@
             this.SignUp = new System.Windows.Forms.RadioButton();
             this.conectar = new System.Windows.Forms.Button();
             this.desconectar = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,6 +54,7 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.consulta_lista);
             this.groupBox1.Controls.Add(this.consulta_duracion);
             this.groupBox1.Controls.Add(this.consulta_fecha);
@@ -141,6 +143,14 @@
             this.desconectar.UseVisualStyleBackColor = true;
             this.desconectar.Click += new System.EventHandler(this.desconectar_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(0, 13);
+            this.label1.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -168,6 +178,7 @@
         private System.Windows.Forms.Button desconectar;
         private System.Windows.Forms.RadioButton consulta_duracion;
         private System.Windows.Forms.RadioButton consulta_lista;
+        private System.Windows.Forms.Label label1;
     }
 }
 

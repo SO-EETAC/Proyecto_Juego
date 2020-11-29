@@ -117,7 +117,7 @@ void *AtenderCliente(void *socket){
 	}
 	
 	//inicializar conexion a BBDD
-	conn = mysql_real_connect (conn, "shiva2.upc.es","root", "mysql", "M1_BBDD_Juego",0, NULL, 0);
+	conn = mysql_real_connect (conn, "localhost","root", "mysql", "JUEGO",0, NULL, 0);
 	if (conn==NULL) {
 		printf ("Error al inicializar la conexion: %u %s\n", 
 				mysql_errno(conn), mysql_error(conn));
@@ -296,7 +296,7 @@ void *AtenderCliente(void *socket){
 				if (strcmp(row[0], contra) == 0) {
 					//la contraseña coincide con el username, login OK
 					printf ("Autentificacion exitosa! \n");
-					strcpy (decision,"Y");
+					sprintf (decision,"Y_%s",usuario);
 					
 					pthread_mutex_lock(&mutex); //No me interrumpas ahora
 					
@@ -314,7 +314,7 @@ void *AtenderCliente(void *socket){
 				else {
 					//la contraseña es incorrecta
 					printf ("Autentificacion fallida :(  \n");
-					strcpy (decision,"N");
+					sprintf (decision,"N_%s",usuario);
 				}
 				
 			}
@@ -474,8 +474,8 @@ int main(int argc, char *argv[]){
 	// asocia el socket a cualquiera de las IP de la maquina. 
 	//htonl formatea el numero que recibe al formato necesario
 	serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
-	// escucharemos en el port 50001
-	serv_adr.sin_port = htons(50001);
+	// escucharemos en el port 9050
+	serv_adr.sin_port = htons(9002); //50001
 	if (bind(sock_listen, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) < 0)
 		printf ("Error al bind\n");
 	//La cola de peticiones pendientes no podra ser superior a 4
