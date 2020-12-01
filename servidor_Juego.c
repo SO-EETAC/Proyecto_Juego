@@ -28,6 +28,44 @@ typedef struct {
 	int num;
 } ListaConectados;
 
+//???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+typedef struct {
+	int oc; //0 indica que la entrada esta libre y 1 que esta ocupada
+	char nombre [30];
+	int socket;
+} TConectado;
+
+typedef TConectado TablaConectados [100];
+
+void Inicializar (TablaConectados tabla)
+{
+	int i;
+	for (i=0; i<100; i++)
+		tabla[i].oc=0;
+}
+
+int PonJugador (TablaConectados tabla, char nombre[30], int socket) //DONDE PONGO ESTA FUNCION?
+{
+	int encontrado =0;
+	int i=0;
+	while ((i<100) && !encontrado)
+	{
+		if (tabla[i].oc==0)
+			encontrado = 1;
+		else
+			i=i+1;
+	}
+	if (!encontrado)
+		return -1;
+	else {
+		tabla[i].socket = socket;
+		strcpy (tabla[i].nombre, nombre);
+		tabla[i].oc=1;
+		return i;
+	}
+}
+//???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+
 ListaConectados lista_jugadores;
 
 int i;
@@ -96,6 +134,34 @@ void DameConectados (ListaConectados *lista, char conectados[400]){
 		sprintf(conectados, "%s_%s", conectados, lista->conectados[i].nombre);
 		
 	}		
+}
+
+int DameSocket(ListaConectados *lista, char nom[20]){
+	//devuelve el numero de socket. Si no encuentra el nombre, devuelve -1.
+	int i = 0;
+	int encontrado = 0;
+	while ((i<lista->num) && encontrado!=1)
+	{
+		if (strcmp(lista->conectados[i].nombre, nom ) == 0)
+		{
+			encontrado=1;
+		}
+		else{
+			i++;
+		}
+		
+	}
+	if (encontrado==1)
+	{
+		
+		return lista->conectados[i].socket;
+		
+	}
+	else{
+		
+		return -1;
+	}
+	
 }
 
 void *AtenderCliente(void *socket){
@@ -421,10 +487,52 @@ void *AtenderCliente(void *socket){
 			
 			sprintf(respuesta, "5/%s",jugadores_conectados);
 		}
+		else if (codigo== 6) //   6/anakilator/1/juanito23
+		{//piden invitar a otro jugador(de momento solo 1)
+			//tengo que consultar el socket de juanito23
+			char invitador[20];
+			char invitado[20];
+			char num_invitados[10];
+			p = strtok( NULL, "/");
+			strcpy(invitador, p);
+			p= strtok(NULL, "/");
+			strcpy(num_invitados,p);
+			p=strtok(NULL, "/");
+			strcpy(invitado,p);
+			
+			sprintf(respuesta, "7/%s_%s_%s", invitador, num_invitados, invitado); //esto le llega al que recibe la invitacion
+			
+			int socket_i=DameSocket(&lista_jugadores,invitado); //ahora que hago con este socket? Es el socket por donde envio la respuesta
+			
+			write(socket_i, respuesta, strlen(respuesta));
+			
+		}
+		else if (codigo == 8) //     8/invitador/num_invitadoe/invitado/si
+		{//pide mandar la respuesta de la invitacion a quien me ha invitado
+			char respuesta_invitacion[10];
+			char invitador[20];
+			char invitado[20];
+			char num_invitados[10];
+			p = strtok( NULL, "/");
+			strcpy(invitador, p);
+			p= strtok(NULL, "/");
+			strcpy(num_invitados,p);
+			p=strtok(NULL, "/");
+			strcpy(invitado,p);
+			p=strtok(NULL,"/");
+			strcpy(respuesta_invitacion,p);
+			
+			sprintf(respuesta, "8/%s_%s_%s_%s", invitador, num_invitados, invitado, respuesta_invitacion);
+			int socket_i=DameSocket(&lista_jugadores,invitado);	
+			int socket_j=DameSocket(&lista_jugadores,invitador);
+			
+			write(socket_i, respuesta, strlen(respuesta));
+			write(socket_j,respuesta,strlen(respuesta));
+		}
 		
 		if (codigo !=0)
 		{
-			printf ("%s\n", respuesta);
+			printf ("Respuesta: %s\n", respuesta);
 			
 			//5)ENVIA LA RESPUESTA
 			// Y lo enviamos
@@ -475,7 +583,7 @@ int main(int argc, char *argv[]){
 	//htonl formatea el numero que recibe al formato necesario
 	serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
 	// escucharemos en el port 9050
-	serv_adr.sin_port = htons(9002); //50001
+	serv_adr.sin_port = htons(9004); //50001
 	if (bind(sock_listen, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) < 0)
 		printf ("Error al bind\n");
 	//La cola de peticiones pendientes no podra ser superior a 4

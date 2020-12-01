@@ -16,6 +16,7 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
+        Tablero_Partida F8 = new Tablero_Partida();
 
         string nombre;
         string usuario;
@@ -24,6 +25,7 @@ namespace WindowsFormsApplication1
         string password_login;
         string fecha;
         string duracion;
+        string conectados;
 
         public Form1()
         {
@@ -36,14 +38,19 @@ namespace WindowsFormsApplication1
 
             while (true)
             {
-                //Recibimos la respuesta del servidor
+                //Recibimos la respuesta del servidor //  7/invitador
                 byte[] msg2 = new byte[80];
                 server.Receive(msg2);
                 string[] trozos = Encoding.ASCII.GetString(msg2).Split('/');
                 int codigo = Convert.ToInt32(trozos[0]);
                 string mensaje = trozos[1].Split('\0')[0];
                 Form6 F6 = new Form6();
-                Form6 F7 = new Form6();
+                Form7 F7 = new Form7();
+                string[] seg;
+                string invitador;
+                int numInvitados;
+                string invitado;
+                string respuesta;
 
                 switch (codigo)
                 {
@@ -65,7 +72,7 @@ namespace WindowsFormsApplication1
                         }
                         else if (segmentos[0] == "N")
                             MessageBox.Show("Contraseña incorrecta");
-                        else if (mensaje == "USER_NOT_FOUND")
+                        else if (segmentos[0] == "USER")
                             MessageBox.Show("El usuario no existe.");
 
                         break;
@@ -95,22 +102,63 @@ namespace WindowsFormsApplication1
 
                     case 6://Hay una notificación de nuevo conectado!
 
-                        F6.setListado(mensaje);
+                        conectados = mensaje;   //  2_anakilator_juanito23
+                        F6.setListado(conectados);
                         F6.setUsuario(usuario);
                         F6.ShowDialog();
                         break;
 
-                    case 7://Hay una invitación
+                    case 7://Hay una invitación: 7/invitador_numInvitados_invitado
 
-                        F7.setListado(string
+                        
+                        seg = mensaje.Split(new char[] { '_' }, 3);
 
 
+                        invitador = seg[0];
+                        numInvitados = Convert.ToInt32(seg[1]);
+                        invitado = seg[2];
+
+
+
+                        if (invitador != usuario)
+                        {
+                            MessageBox.Show("Hola " + usuario + ", " + invitador + " te ha invitado a jugar!");
+                            F7.setListado(conectados);
+                            F7.setInvitador(invitador);
+                            F7.ShowDialog();
+                            respuesta = F7.GetRespuesta();
+                            //Enviamos petición con la respuesta de la invitacion
+                            string mensj = "8/" + invitador + "/" + numInvitados + "/" + invitado + "/" + respuesta;
+                            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensj);
+                            server.Send(msg);
+                            
+
+                        }
+                        break;
+                        
+                    case 8: //Recibimos respuesta de la invitacion: 8/invitador/num_invitados/invitado/siOno
+
+                        seg = mensaje.Split(new char[] { '_' }, 4);
+
+
+                        invitador = seg[0];
+                        //numInvitados = Convert.ToInt32(seg[1]);
+                        invitado = seg[2];
+                        respuesta = seg[3];
+
+                        if (respuesta == "no")
+                        {
+                            MessageBox.Show(invitado + " ha rechazado la invitación");
+                        }
+                        else
+                        {
+                             F8.setInvitador(invitador);
+                             F8.setUsuario(invitado);
+                             F8.ShowDialog();
+                        }
                         break;
 
-
                 }
-
-
 
             }
             
@@ -123,7 +171,7 @@ namespace WindowsFormsApplication1
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102"); //147.83.117.22
-            IPEndPoint ipep = new IPEndPoint(direc, 9002); //50001
+            IPEndPoint ipep = new IPEndPoint(direc, 9004); //50001
             //Creamos el socket 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
@@ -207,6 +255,17 @@ namespace WindowsFormsApplication1
                 // Enviamos el código pertinente a la solicitud
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
+            }
+            else if(invitar.Checked)
+            {
+                Form6 F6 = new Form6();
+                F6.setListado(conectados);
+                F6.ShowDialog();
+                string invitados = F6.GetListado();
+                string mensaje = "6/"+usuario+"/"+invitados; //    6/anakilator/1/juanito23
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+
             }
         }
 
