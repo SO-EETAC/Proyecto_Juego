@@ -26,6 +26,9 @@ namespace WindowsFormsApplication1
         string fecha;
         string duracion;
         string conectados;
+        string aceptados;
+        int cont_invitados = 1;
+        int cont_aceptados = 1; //el invitador cuenta como el primer aceptado
 
         public Form1()
         {
@@ -55,12 +58,14 @@ namespace WindowsFormsApplication1
                 switch (codigo)
                 {
 
-                    case 1://Puedo crear una cuenta
+                    case 1:
+                        //Puedo crear una cuenta
 
                         MessageBox.Show(mensaje);
                         break;
 
-                    case 2://Puedo iniciar sesión? Recibo un mensaje de la forma Y_Usuario o N
+                    case 2:
+                        //Puedo iniciar sesión? Recibo un mensaje de la forma Y_Usuario o N
 
                         string[] segmentos = mensaje.Split('_');
 
@@ -77,7 +82,8 @@ namespace WindowsFormsApplication1
 
                         break;
 
-                    case 3://Hay ganadores para una fecha?
+                    case 3:
+                        //Hay ganadores para una fecha?
 
                         if (mensaje == "NOT_FOUND")
                             MessageBox.Show("No hay ganadores para esta fecha");
@@ -85,7 +91,8 @@ namespace WindowsFormsApplication1
                             MessageBox.Show(mensaje);
                         break;
 
-                    case 4://Hay ganadores para una duración?
+                    case 4:
+                        //Hay ganadores para una duración?
 
                         if (mensaje == "NOT_FOUND")
                             MessageBox.Show("No hay ganadores con la duracion de partida proporcionada ");
@@ -93,14 +100,16 @@ namespace WindowsFormsApplication1
                             MessageBox.Show(mensaje);
                         break;
 
-                    case 5://Que usuarios hay conectados?
+                    case 5:
+                        //Que usuarios hay conectados?
 
                         F6.setListado(mensaje);
                         F6.setUsuario(usuario);
                         F6.ShowDialog();
                         break;
 
-                    case 6://Hay una notificación de nuevo conectado!
+                    case 6:
+                        //Hay una notificación de nuevo conectado!
 
                         conectados = mensaje;   //  2_anakilator_juanito23
                         F6.setListado(conectados);
@@ -108,7 +117,8 @@ namespace WindowsFormsApplication1
                         F6.ShowDialog();
                         break;
 
-                    case 7://Hay una invitación: 7/invitador_numInvitados_invitado
+                    case 7:
+                        //Hay una invitación: 7/invitador_numInvitados_invitado
 
                         
                         seg = mensaje.Split(new char[] { '_' }, 3);
@@ -120,11 +130,12 @@ namespace WindowsFormsApplication1
 
 
 
-                        if (invitador != usuario)
+                        if ((invitado == usuario)&&(invitador != usuario))
                         {
-                            MessageBox.Show("Hola " + usuario + ", " + invitador + " te ha invitado a jugar!");
+                            MessageBox.Show("Hola " + invitado + ", " + invitador + " te ha invitado a jugar!");
                             F7.setListado(conectados);
                             F7.setInvitador(invitador);
+                            F7.setUsuario(usuario);
                             F7.ShowDialog();
                             respuesta = F7.GetRespuesta();
                             //Enviamos petición con la respuesta de la invitacion
@@ -132,38 +143,81 @@ namespace WindowsFormsApplication1
                             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensj);
                             server.Send(msg);
                             
-
                         }
                         break;
                         
-                    case 8: //Recibimos respuesta de la invitacion: 8/invitador/num_invitados/invitado/siOno
+                    case 9:
+                        //El invitador recibe respuesta de la invitacion: 9/invitador_numInvitados_invitado_siOno
 
                         seg = mensaje.Split(new char[] { '_' }, 4);
 
 
                         invitador = seg[0];
-                        //numInvitados = Convert.ToInt32(seg[1]);
+                        numInvitados = Convert.ToInt32(seg[1]);
                         invitado = seg[2];
                         respuesta = seg[3];
 
-                        if (respuesta == "no")
+                        if (usuario == invitador)
                         {
-                            MessageBox.Show(invitado + " ha rechazado la invitación");
+                            aceptados = invitador;
+
+                            while (cont_aceptados <= cont_invitados)
+                            {
+                                if (respuesta == "no")
+                                {
+                                    MessageBox.Show(invitado + " ha rechazado la invitación");
+                                    cont_invitados++; //incrementamos +1 el contador de invitados que han contestado
+                                }
+                                else
+                                { //respuesta == si, tmb podria ser k no conteste alguno
+                                    F8.setInvitador(invitador);
+                                    
+                                    cont_invitados++; //incrementamos +1 el contador de invitados que han contestado
+                                    cont_aceptados++;//incrementamos +1 el contador de invitados que han aceptado
+                                    aceptados = aceptados + "_" + invitado;//añadimos el usuario a la lista de aceptados
+                                    if (numInvitados == cont_invitados)
+                                    {
+                                        //Quiere enviar mensaje a todos los invitados que han aceptado para empezar a jugar
+                                        string mensj = "10" + "/" + Convert.ToString(cont_aceptados) + "/" + aceptados;
+                                        // Enviamos al servidor
+                                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensj);
+                                        server.Send(msg);
+                                        F8.ShowDialog();
+                                    }
+                                }
+                            }
                         }
-                        else
+                        break;
+
+                    case 11:
+
+                        //Los que han aceptado, empiezan a jugar;  mensaje:11/aceptado/lista_participantes
+                        seg = mensaje.Split(new char[] { '/' }, 4);
+
+                        invitado = seg[0];
+                        aceptados = seg[1];
+                        string[] s = aceptados.Split(new char[] { '_' }, cont_aceptados);
+                        int i = 1;
+                        while (i < cont_aceptados)
                         {
-                             F8.setInvitador(invitador);
-                             F8.setUsuario(invitado);
-                             F8.ShowDialog();
+                            invitador = s[0];
+                            
+                            if((usuario!=invitador)&&(usuario == invitado))
+                            {
+                                F8.setInvitador(invitador);
+                                F8.setUsuario(invitado);
+                                F8.setNumParticipantes(cont_aceptados);
+                                F8.setParticipantes(aceptados);
+                                F8.ShowDialog();
+                            }
+                            i++;
                         }
                         break;
 
                 }
 
             }
-            
-
-
+         
         }
 
         private void conectar_Click(object sender, EventArgs e)
@@ -171,7 +225,7 @@ namespace WindowsFormsApplication1
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102"); //147.83.117.22
-            IPEndPoint ipep = new IPEndPoint(direc, 9004); //50001
+            IPEndPoint ipep = new IPEndPoint(direc, 9003); //50001
             //Creamos el socket 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
@@ -262,7 +316,7 @@ namespace WindowsFormsApplication1
                 F6.setListado(conectados);
                 F6.ShowDialog();
                 string invitados = F6.GetListado();
-                string mensaje = "6/"+usuario+"/"+invitados; //    6/anakilator/1/juanito23
+                string mensaje = "6/"+usuario+"/"+invitados; //    6/invitador/1/listado_invitados
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
 

@@ -11,8 +11,10 @@ namespace WindowsFormsApplication1
 {
     public partial class Tablero_Partida : Form
     {
-        string listado_invitados, usuario;
+        string usuario;
         string invitador;
+        string participantes;
+        int numParticipantes;
         public Tablero_Partida()
         {
             InitializeComponent();
@@ -22,34 +24,29 @@ namespace WindowsFormsApplication1
             invitador = Invitador; //anakilator
         }
 
+
         public void setUsuario(string usr)
         {
             usuario = usr; //juanito23
         }
+        public void setParticipantes(string p)
+        {
+            participantes = p; // anakilator_juanito23_martita21
+        }
+        public void setNumParticipantes(int n)
+        {
+            numParticipantes = n;
+        }
         private void Tablero_Partida_Load(object sender, EventArgs e)
         {
-            jugador1Lbl.Text = invitador;
-            jugador2Lbl.Text = usuario;
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void NumFichasJug3_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
+            turno1Lbl.Text = "Primer turno:" + invitador;
+            
+            string[] seg = participantes.Split(new char[] { '_' }, (numParticipantes - 1));
+            jugador1Lbl.Text = seg[0];
+            jugador2Lbl.Text = seg[1];
+            Jugador3Lbl.Text = seg[2];
+            Jugador4Lbl.Text = seg[3];
+        
         }
     }
 }

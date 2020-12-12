@@ -13,6 +13,7 @@ namespace WindowsFormsApplication1
     {
         string listado_jugadores, usuario;
         string listado_invitados;
+        int cont = 0;
 
         public Form6()
         {
@@ -30,41 +31,53 @@ namespace WindowsFormsApplication1
         }
         public string GetListado()
         {
-            //yo, anakilator, invito a juanito23 y martita21 -> listado_invitados: juanito23/martita21
-            return listado_invitados;
+            
+            return listado_invitados; // numInvitados/invitado[0]/invitado[1]/...
         }
 
         
 
         private void Form6_Load(object sender, EventArgs e)
         {
-            if (usuario == "anakilator")
+            cont++;
+
+            if (cont == 1)
             {
                 this.BackColor = Color.Red;
             }
-            string[] segmentos = listado_jugadores.Split('_');
+            else if (cont == 2)
+            {
+                this.BackColor = Color.Blue;
+            }
+
+
+            //recogemos la lista de jugadores en línea y los mostramos
+            string[] segmentos = listado_jugadores.Split('_'); 
 
             if (segmentos[0] == "0")
-            {
+            { //no hay
 
                 listBox1.Items.Add("No hay ningún jugador en linea");
 
             }
             else if (segmentos[0] == "1")
-            {
+            { //hay 1
+
                 listBox1.Items.Add("El/La jugador/a en linea es: ");
-                if (segmentos[1]  == usuario) //cuando coincida el nombre de listado con el usuario que te has registrado, en la lista de conectados ponemos(Tu) al lado de tu usuario.
+
+                if (segmentos[1]  == usuario) //cuando coincida el nombre del listado con el usuario que te has registrado, en la lista de conectados ponemos(Tu) al lado de tu usuario.
                     listBox1.Items.Add(segmentos[1] + "(Tú)"); 
                 else
                     listBox1.Items.Add(segmentos[1]);
             }
             else
-            {
-                listBox1.Items.Add("Los " + Convert.ToInt32(segmentos[0]) + " jugador en linea son: ");
+            { //hay mas de 1
+
+                listBox1.Items.Add("Los " + Convert.ToInt32(segmentos[0]) + " jugadores en linea son: ");
 
                 for (int i = 1; i < (Convert.ToInt32(segmentos[0])+1); i++)
                 {
-                    if (segmentos[i] == usuario)
+                    if (segmentos[i] == usuario) //cuando coincida el nombre del listado con el usuario que te has registrado, en la lista de conectados ponemos(Tu) al lado de tu usuario.
                         listBox1.Items.Add(segmentos[i] + "(Tú)");
                     else
                         listBox1.Items.Add(segmentos[i]);
@@ -74,25 +87,20 @@ namespace WindowsFormsApplication1
         }
 
         private void invitar_Click(object sender, EventArgs e)
-        {
+        {//Se seleccionan los usuarios que queremos invitar, y se crea una lista de invitados
 
             string num_invitados = Convert.ToString(listBox1.SelectedIndices.Count);
 
+            listado_invitados = num_invitados + "/" + listBox1.SelectedItems[0];
 
-            for (int i = 0; i < listBox1.SelectedIndices.Count; i++)
+            for (int i = 1; i < listBox1.SelectedIndices.Count; i++)
             {
-                //si soy anakilator y he invitado a juanito23, el mensaje es: 2_anakilator_juantio23 (tengo que seleccionarme a mi y a juanito)
-                string mensaje = num_invitados + "_" + listBox1.SelectedItems[i];
-                listado_invitados = num_invitados + "/" + listBox1.SelectedItems[i]; // 1/juanito23
+                
+                listado_invitados = listado_invitados + "/" + listBox1.SelectedItems[i]; 
 
             }
             Close();
-           // Form7 F7 = new Form7();
-            //F7.setUsuario(usuario);                 
-            //F7.setListado(mensaje);
-           // F7.ShowDialog();
-
-
+          
         }
 
 

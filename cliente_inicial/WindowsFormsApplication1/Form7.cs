@@ -42,10 +42,7 @@ namespace WindowsFormsApplication1
         {
             if (usuario != invitador)
             {
-                if (usuario == "anakilator")
-                {
-                    this.BackColor = Color.Red;
-                }
+                
                 invitadorLbl.Text = invitador;
                 
                 string[] segmentos = listado_invitados.Split('_');
@@ -57,27 +54,14 @@ namespace WindowsFormsApplication1
                     this.Close();
 
                 }
-                //else if (segmentos[0] == "1")
-                //{
-
-                //    MessageBox.Show("Tiene que seleccionar 2 o más jugadores!");
-                //    this.Close();
-
-                //}
                 else
-                {
+                { //muestra la lista de invitados
                     for (int i = 1; i < (Convert.ToInt32(segmentos[0]) + 1); i++)
                         if (segmentos[i] != invitador)
                         {
                             listView1.Items.Add(segmentos[i]);
                         }
 
-                    //for (int i = 1; i < (Convert.ToInt32(segmentos[0]) + 1); i++)
-                    //{
-
-                    //listView1.Items.Add(segmentos[i]);
-
-                    //}
                 }
             }
         }
@@ -88,21 +72,21 @@ namespace WindowsFormsApplication1
         }
 
         private void button2_Click(object sender, EventArgs e)
-        {
+        { //boton rechazar invitacion
             respuesta = "no";
             Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)//Aceptar_click (aceptar invitacion)
-        {
+        private void button1_Click(object sender, EventArgs e)
+        { //boton aceptar invitacion
 
             for (int i = 0; i < listView1.Items.Count; i++)
             {
-                string cmpr = usuario;
-                if (listView1.Items[i].Text == cmpr)
+                
+                if (listView1.Items[i].Text == usuario)
                 {
 
-                    listView1.Items[i].BackColor = Color.Green;
+                    listView1.Items[i].Text = usuario + "(Aceptado)";
 
                 }
 
