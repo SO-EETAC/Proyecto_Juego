@@ -13,6 +13,7 @@ namespace WindowsFormsApplication1
     {
         string listado_invitados, usuario;
         string invitador;
+        string frase;
         public Tablero_Partida()
         {
             InitializeComponent();
@@ -26,11 +27,14 @@ namespace WindowsFormsApplication1
         {
             usuario = usr; //juanito23
         }
+
+        
         private void Tablero_Partida_Load(object sender, EventArgs e)
         {
             jugador1Lbl.Text = invitador;
             jugador2Lbl.Text = usuario;
         }
+        
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -45,6 +49,11 @@ namespace WindowsFormsApplication1
         private void button1_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {//boton enviar
+            
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)

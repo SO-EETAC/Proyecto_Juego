@@ -26,6 +26,7 @@ namespace WindowsFormsApplication1
         string fecha;
         string duracion;
         string conectados;
+        string frase;
 
         public Form1()
         {
@@ -129,8 +130,8 @@ namespace WindowsFormsApplication1
                             respuesta = F7.GetRespuesta();
                             //Enviamos petición con la respuesta de la invitacion
                             string mensj = "8/" + invitador + "/" + numInvitados + "/" + invitado + "/" + respuesta;
-                            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensj);
-                            server.Send(msg);
+                            byte[] m = System.Text.Encoding.ASCII.GetBytes(mensj);
+                            server.Send(m);
                             
 
                         }
@@ -157,6 +158,28 @@ namespace WindowsFormsApplication1
                              F8.ShowDialog();
                         }
                         break;
+                    case 13: //"13/%s_%s_%d", emisor, frase, numConectados
+
+                        seg = mensaje.Split(new char[] { '_' }, 4);
+
+                        string emisor = seg[0];
+                        string frase = seg[1];
+                        int numConectados = Convert.ToInt32(seg[2]);
+
+                        Form9 F9 = new Form9();
+                        F9.setListado(conectados);
+                        F9.setEmisor(emisor);
+                        F9.setMensaje(frase);
+                        F9.ShowDialog();
+                        frase = F9.GetFrase();
+                        mensaje = "12/" + usuario + "/" + frase + "/" + conectados;
+                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                        server.Send(msg);
+
+
+
+                        break;
+
 
                 }
 
@@ -171,7 +194,7 @@ namespace WindowsFormsApplication1
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102"); //147.83.117.22
-            IPEndPoint ipep = new IPEndPoint(direc, 9004); //50001
+            IPEndPoint ipep = new IPEndPoint(direc, 9003); //50001
             //Creamos el socket 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
@@ -195,7 +218,8 @@ namespace WindowsFormsApplication1
 
         }
         private void button2_Click(object sender, EventArgs e)
-        {
+        {//BOTON ENVIAR DEL FORM_1
+            
 
             if (SignUp.Checked)
             {
@@ -267,6 +291,20 @@ namespace WindowsFormsApplication1
                 server.Send(msg);
 
             }
+            else if (chat.Checked)
+            {
+                Form9 F9 = new Form9();
+                F9.setListado(conectados); //2_anakilator_juanito23
+                F9.setUsuario(usuario);
+                F9.ShowDialog();
+                frase = F9.GetFrase();
+                string mensaje = "12/" + usuario + "/" + frase + "/" + conectados;
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+
+            }
+
+
         }
 
         private void desconectar_Click(object sender, EventArgs e)

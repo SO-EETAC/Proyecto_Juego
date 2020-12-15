@@ -60,7 +60,7 @@
             // 
             this.CajaRobar.Image = global::WindowsFormsApplication1.Properties.Resources.Robar_caja;
             this.CajaRobar.Location = new System.Drawing.Point(975, 190);
-            this.CajaRobar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CajaRobar.Margin = new System.Windows.Forms.Padding(4);
             this.CajaRobar.Name = "CajaRobar";
             this.CajaRobar.Size = new System.Drawing.Size(105, 202);
             this.CajaRobar.TabIndex = 1;
@@ -70,7 +70,7 @@
             // 
             this.FondoTablero.Image = global::WindowsFormsApplication1.Properties.Resources.Tablero_def1;
             this.FondoTablero.Location = new System.Drawing.Point(391, 96);
-            this.FondoTablero.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FondoTablero.Margin = new System.Windows.Forms.Padding(4);
             this.FondoTablero.Name = "FondoTablero";
             this.FondoTablero.Size = new System.Drawing.Size(708, 439);
             this.FondoTablero.TabIndex = 0;
@@ -79,7 +79,7 @@
             // Robar
             // 
             this.Robar.Location = new System.Drawing.Point(976, 399);
-            this.Robar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Robar.Margin = new System.Windows.Forms.Padding(4);
             this.Robar.Name = "Robar";
             this.Robar.Size = new System.Drawing.Size(104, 52);
             this.Robar.TabIndex = 2;
@@ -89,7 +89,7 @@
             // Mezclar
             // 
             this.Mezclar.Location = new System.Drawing.Point(48, 44);
-            this.Mezclar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Mezclar.Margin = new System.Windows.Forms.Padding(4);
             this.Mezclar.Name = "Mezclar";
             this.Mezclar.Size = new System.Drawing.Size(119, 62);
             this.Mezclar.TabIndex = 3;
@@ -99,7 +99,7 @@
             // VolveraJugar
             // 
             this.VolveraJugar.Location = new System.Drawing.Point(48, 113);
-            this.VolveraJugar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.VolveraJugar.Margin = new System.Windows.Forms.Padding(4);
             this.VolveraJugar.Name = "VolveraJugar";
             this.VolveraJugar.Size = new System.Drawing.Size(117, 62);
             this.VolveraJugar.TabIndex = 4;
@@ -132,7 +132,7 @@
             // NumFichasJug3
             // 
             this.NumFichasJug3.Location = new System.Drawing.Point(803, 15);
-            this.NumFichasJug3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.NumFichasJug3.Margin = new System.Windows.Forms.Padding(4);
             this.NumFichasJug3.Name = "NumFichasJug3";
             this.NumFichasJug3.Size = new System.Drawing.Size(51, 22);
             this.NumFichasJug3.TabIndex = 7;
@@ -141,7 +141,7 @@
             // NumFichasJug2
             // 
             this.NumFichasJug2.Location = new System.Drawing.Point(328, 256);
-            this.NumFichasJug2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.NumFichasJug2.Margin = new System.Windows.Forms.Padding(4);
             this.NumFichasJug2.Name = "NumFichasJug2";
             this.NumFichasJug2.Size = new System.Drawing.Size(45, 22);
             this.NumFichasJug2.TabIndex = 8;
@@ -149,7 +149,7 @@
             // NumFichasJug4
             // 
             this.NumFichasJug4.Location = new System.Drawing.Point(1264, 256);
-            this.NumFichasJug4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.NumFichasJug4.Margin = new System.Windows.Forms.Padding(4);
             this.NumFichasJug4.Name = "NumFichasJug4";
             this.NumFichasJug4.Size = new System.Drawing.Size(47, 22);
             this.NumFichasJug4.TabIndex = 9;
@@ -158,7 +158,7 @@
             // LogoJug3
             // 
             this.LogoJug3.Location = new System.Drawing.Point(663, 39);
-            this.LogoJug3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LogoJug3.Margin = new System.Windows.Forms.Padding(4);
             this.LogoJug3.Name = "LogoJug3";
             this.LogoJug3.Size = new System.Drawing.Size(123, 49);
             this.LogoJug3.TabIndex = 10;
@@ -167,7 +167,7 @@
             // LogoJug2
             // 
             this.LogoJug2.Location = new System.Drawing.Point(188, 298);
-            this.LogoJug2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LogoJug2.Margin = new System.Windows.Forms.Padding(4);
             this.LogoJug2.Name = "LogoJug2";
             this.LogoJug2.Size = new System.Drawing.Size(125, 74);
             this.LogoJug2.TabIndex = 11;
@@ -187,7 +187,7 @@
             // LogoJug4
             // 
             this.LogoJug4.Location = new System.Drawing.Point(1116, 282);
-            this.LogoJug4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LogoJug4.Margin = new System.Windows.Forms.Padding(4);
             this.LogoJug4.Name = "LogoJug4";
             this.LogoJug4.Size = new System.Drawing.Size(127, 89);
             this.LogoJug4.TabIndex = 13;
@@ -207,7 +207,7 @@
             // NumFichasJug1
             // 
             this.NumFichasJug1.Location = new System.Drawing.Point(799, 556);
-            this.NumFichasJug1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.NumFichasJug1.Margin = new System.Windows.Forms.Padding(4);
             this.NumFichasJug1.Name = "NumFichasJug1";
             this.NumFichasJug1.Size = new System.Drawing.Size(53, 22);
             this.NumFichasJug1.TabIndex = 15;
@@ -215,7 +215,7 @@
             // LogoJug1
             // 
             this.LogoJug1.Location = new System.Drawing.Point(527, 602);
-            this.LogoJug1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LogoJug1.Margin = new System.Windows.Forms.Padding(4);
             this.LogoJug1.Name = "LogoJug1";
             this.LogoJug1.Size = new System.Drawing.Size(239, 79);
             this.LogoJug1.TabIndex = 16;
@@ -224,7 +224,7 @@
             // ImagenFichas
             // 
             this.ImagenFichas.Location = new System.Drawing.Point(792, 601);
-            this.ImagenFichas.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ImagenFichas.Margin = new System.Windows.Forms.Padding(4);
             this.ImagenFichas.Name = "ImagenFichas";
             this.ImagenFichas.Size = new System.Drawing.Size(273, 95);
             this.ImagenFichas.TabIndex = 17;
@@ -266,7 +266,7 @@
             this.Controls.Add(this.Robar);
             this.Controls.Add(this.CajaRobar);
             this.Controls.Add(this.FondoTablero);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Tablero_Partida";
             this.Text = "Tablero_Partida";
             this.Load += new System.EventHandler(this.Tablero_Partida_Load);

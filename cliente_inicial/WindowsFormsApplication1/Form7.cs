@@ -72,12 +72,7 @@ namespace WindowsFormsApplication1
                             listView1.Items.Add(segmentos[i]);
                         }
 
-                    //for (int i = 1; i < (Convert.ToInt32(segmentos[0]) + 1); i++)
-                    //{
-
-                    //listView1.Items.Add(segmentos[i]);
-
-                    //}
+                   
                 }
             }
         }
