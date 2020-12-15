@@ -41,12 +41,21 @@ namespace WindowsFormsApplication1
         {
             turno1Lbl.Text = "Primer turno:" + invitador;
             
-            string[] seg = participantes.Split(new char[] { '_' }, (numParticipantes - 1));
+            string[] seg = participantes.Split('_');
+            
+
             jugador1Lbl.Text = seg[0];
             jugador2Lbl.Text = seg[1];
             Jugador3Lbl.Text = seg[2];
             Jugador4Lbl.Text = seg[3];
-        
+            
+            
+
+
+
+
+
+
         }
     }
 }

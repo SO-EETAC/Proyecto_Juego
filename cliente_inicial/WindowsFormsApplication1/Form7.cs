@@ -22,16 +22,16 @@ namespace WindowsFormsApplication1
 
         public void setListado(string jugadores)
         {
-            listado_invitados = jugadores; //2_anakilator_juanito23
+            listado_invitados = jugadores; //2_invitador_invitado
         }
         public void setInvitador(string Invitador)
         {
-            invitador = Invitador; //anakilator
+            invitador = Invitador;
         }
 
         public void setUsuario(string usr)
         {
-            usuario = usr; //juanito23
+            usuario = usr; //invitado
         }
         public string GetRespuesta()
         {
