@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
         string password_login;
         string fecha;
         string duracion;
-        string conectados;
+        string conectados;  
         string invitados;
         string aceptados;
         int cont_invitados = 0;
@@ -266,7 +266,7 @@ namespace WindowsFormsApplication1
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102"); //147.83.117.22
-            IPEndPoint ipep = new IPEndPoint(direc, 9003); //50001
+            IPEndPoint ipep = new IPEndPoint(direc, 9004); //50001
             //Creamos el socket 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
